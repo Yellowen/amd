@@ -1,5 +1,5 @@
-require "amd/engine"
+require 'amd/engine'
 
-module Amd
+module AMD
   # Your code goes here...
 end

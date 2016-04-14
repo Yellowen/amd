@@ -1,3 +1,3 @@
-module Amd
+module AMD
   VERSION = '0.1.0'
 end
