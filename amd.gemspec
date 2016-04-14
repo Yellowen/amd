@@ -10,13 +10,15 @@ Gem::Specification.new do |s|
   s.authors     = ["Sameer Rahmani"]
   s.email       = ["lxsameer@gnu.org"]
   s.homepage    = "https://github.com/Yellowen/amd"
-  s.summary     = "TODO: Summary of Amd."
-  s.description = "TODO: Description of Amd."
+  s.summary     = "Async module definition for rails assets pipeline. It's simple, fast and can be used with assets pipeline manifest structure."
+  s.description = "AMD allows you to load js code in async fashion and base on your controller action."
   s.license     = "MIT"
 
   s.files = Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.md"]
+  s.test_files = Dir['test/**/*']
+  s.require_paths = ['lib']
 
-  s.add_dependency "rails", ">= 5.0.0.beta3", "< 5.1"
+  s.add_dependency 'rails'
+  s.add_dependency 'coffees-rails'
 
-  s.add_development_dependency "sqlite3"
 end
