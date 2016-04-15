@@ -6,5 +6,11 @@ module AMD
       app.config.assets.precompile = %w( *.amd.js* ) + app.config.assets.precompile
     end
 
+    def setup
+      yield self
+    end
+
+    mattr_accessor :amd_dir
+    @@amd_dir = 'amd'
   end
 end

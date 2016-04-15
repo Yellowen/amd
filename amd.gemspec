@@ -19,6 +19,6 @@ Gem::Specification.new do |s|
   s.require_paths = ['lib']
 
   s.add_dependency 'rails'
-  s.add_dependency 'coffees-rails'
+  s.add_dependency 'coffee-rails'
 
 end
