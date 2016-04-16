@@ -19,7 +19,7 @@ Gem::Specification.new do |s|
   s.require_paths = ['lib']
   s.signing_key = File.expand_path("~/.ssh/gem-private_key.pem") if $0 =~ /gem\z/
 
-  s.add_dependency 'rails'
+  s.add_dependency 'rails', '~> 0'
   s.add_dependency 'coffee-rails'
 
 end
