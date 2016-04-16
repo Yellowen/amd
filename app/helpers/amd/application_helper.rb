@@ -1,4 +1,4 @@
-module Amd
+module AMD
   module ApplicationHelper
   end
 end
