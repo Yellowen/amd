@@ -3,7 +3,7 @@ module AMD
     isolate_namespace AMD
 
     initializer 'amd.configuration.assets' do |app|
-      app.config.assets.precompile = %w( *.amd.js* amd.js.coffee ) + app.config.assets.precompile
+      app.config.assets.precompile = %w( *.amd.js* *.amd.js.coffee ) + app.config.assets.precompile
     end
 
     def setup
@@ -14,7 +14,8 @@ module AMD
     @@amd_dir = 'amd'
 
     def self.amd_module(controller)
-      "#{controller.controller_path}/amd/#{controller.controller_name}/#{controller.action_name}"
+      mod_path = controller.controller_path.split('/')[0..-2].join('/')
+      "#{mod_path}/amd/#{controller.controller_name}/#{controller.action_name}"
     end
   end
 end

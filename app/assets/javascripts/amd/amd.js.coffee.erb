@@ -24,7 +24,7 @@ window.fetch_js = (url, callback) ->
   body        = document.getElementsByTagName('body')[0]
   script      = document.createElement 'script'
   script.type = 'text/javascript'
-  script.src  = "<%= AMD::Engine.amd_dir %>/" + url
+  script.src  = "/<%= AMD::Engine.amd_dir %>/" + url
 
   # Then bind the event to the callback function.
   # There are several events for cross browser compatibility.
@@ -39,6 +39,8 @@ window.define = (name, deps, fn) ->
   console.group('Define ' + name)
 
   modules_to_inject = []
+  fetched_modules   = []
+
   window.modules[name] = {
     name: name,
     deps: deps,
@@ -56,17 +58,23 @@ window.define = (name, deps, fn) ->
     modules_to_inject.push m if m != undefined
     # end each
 
+  modules_to_inject.reverse().each (x) ->
+    gmod = window.modules[x]
+    if gmod != undefined
+      fetched_modules = gmod.fn
+
   console.groupEnd('Define ' + name);
-  fn.apply(fn, modules_to_inject)
+  return fn.apply(fn, fetched_modules)
 
 window.require = (module_name) ->
   path = to_module_path(module_name)
 
   if path != undefined
-    m = fetch_js path, ->
-      console.log('Module "' + module_name +"' loaded")
+    fetch_js path, ->
+      console.log('Module "' +module_name+ "' loaded")
 
-    return m
+    return module_name
+
   return undefined
 
 $ ->
