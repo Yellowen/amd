@@ -15,7 +15,7 @@ module AMD
 
     def self.amd_module(controller)
       mod_path = controller.controller_path.split('/')[0..-2].join('/')
-      "#{mod_path}/amd/#{controller.controller_name}/#{controller.action_name}"
+      "#{mod_path}/#{controller.controller_name}/#{controller.action_name}"
     end
   end
 end

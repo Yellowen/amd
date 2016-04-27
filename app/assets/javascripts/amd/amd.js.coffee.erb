@@ -1,5 +1,6 @@
-window.__amd_table__ = {}
-window.modules       = {}
+window.__amd_table__     = {}
+window.modules           = {}
+window.mod_to_load_count = 0
 
 # Guess the js module to load from the action name
 window.guess_module = ->
@@ -35,11 +36,12 @@ window.fetch_js = (url, callback) ->
   body.appendChild script
 
 
+# Define an AMD module as the given name with an array containing
+# the name of its dependencies and with a given function as its
+# actual body.
 window.define = (name, deps, fn) ->
   console.group('Define ' + name)
 
-  modules_to_inject = []
-  fetched_modules   = []
 
   window.modules[name] = {
     name: name,
@@ -55,19 +57,31 @@ window.define = (name, deps, fn) ->
     if m == undefined
       m = require(dep)
 
-    modules_to_inject.push m if m != undefined
-    # end each
+    # modules_to_inject.push m if m != undefined
+    # # end each
 
-  modules_to_inject.reverse().each (x) ->
-    gmod = window.modules[x]
-    if gmod != undefined
-      fetched_modules = gmod.fn
+  # modules_to_inject.reverse().each (x) ->
+  #   gmod = window.modules[x]
+  #   if gmod != undefined
+  #     fetched_modules = gmod.fn
+  window.mod_to_load_count = window.mod_to_load_count - 1
+
+  if window.mod_to_load_count == 0
+    $('body').trigger('dependencies_loaded')
 
   console.groupEnd('Define ' + name);
-  return fn.apply(fn, fetched_modules)
+  #return fn.apply(fn, fetched_modules)
 
+# Require the module file by it's name
 window.require = (module_name) ->
-  path = to_module_path(module_name)
+  path                     = to_module_path(module_name)
+  window.mod_to_load_count = window.mod_to_load_count + 1
+
+  if window.mod_to_load_count == 1
+    # We are at the main module require block
+    $('body').on 'dependencies_loaded', ->
+      window.run_module module_name
+
 
   if path != undefined
     fetch_js path, ->
@@ -76,6 +90,21 @@ window.require = (module_name) ->
     return module_name
 
   return undefined
+
+# Call the function of the given module name by it's name
+window.run_module = (name) ->
+  mod = window.modules[name]
+  fn_to_inject = []
+
+  if mod == undefined
+    throw 'No module found for "' +name+ '".'
+
+  if mod.deps.length != 0
+    mod.deps.each (dep) ->
+      fn_to_inject.push window.run_module(dep)
+
+  return mod.fn.apply(mod.fn, fn_to_inject)
+
 
 $ ->
   guess_module()
