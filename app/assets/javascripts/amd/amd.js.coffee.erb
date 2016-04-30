@@ -81,7 +81,7 @@ window.require = (module_name) ->
     # We are at the main module require block
     $('body').on 'dependencies_loaded', ->
       window.run_module module_name
-
+      $(document).trigger("amd:done")
 
   if path != undefined
     fetch_js path, ->
