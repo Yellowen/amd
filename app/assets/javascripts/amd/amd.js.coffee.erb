@@ -4,6 +4,7 @@ window.mod_to_load_count = 0
 
 # Guess the js module to load from the action name
 window.guess_module = ->
+  window.mod_to_load_count = 0
   action_module = $("body").data('action');
   require action_module
 
@@ -68,7 +69,7 @@ window.define = (name, deps, fn) ->
 
   if window.mod_to_load_count == 0
     $('body').trigger('dependencies_loaded')
-
+    console.log("shiiiit")
   console.groupEnd('Define ' + name);
   #return fn.apply(fn, fetched_modules)
 
@@ -76,10 +77,12 @@ window.define = (name, deps, fn) ->
 window.require = (module_name) ->
   path                     = to_module_path(module_name)
   window.mod_to_load_count = window.mod_to_load_count + 1
-
+  console.log("requiring")
   if window.mod_to_load_count == 1
+    console.log("main_module")
     # We are at the main module require block
     $('body').on 'dependencies_loaded', ->
+      console.log("handler")
       window.run_module module_name
       $(document).trigger("amd:done")
 
